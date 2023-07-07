@@ -4,6 +4,7 @@
 Ở phần này ta có 2 nội dung chính:
 - Phần 1: Tìm hiểu về cách để play video, audio
 <p align="right">(<a href="#buoc7">Overview Phần 1</a>)</p>
+
 - Phần 2: Tìm hiểu vễ cách tua video, audio, cut merge video,..
 <p align="right">(<a href="#phan2">Phần 2</a>)</p>
 
