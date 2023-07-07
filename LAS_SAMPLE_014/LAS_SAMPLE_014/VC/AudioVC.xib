@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="ClashDisplay-Bold.otf">
+            <string>ClashDisplay-Bold</string>
+        </array>
+        <array key="ClashDisplay-Medium.otf">
+            <string>ClashDisplay-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AudioVC" customModule="LAS_SAMPLE_014" customModuleProvider="target">
+            <connections>
+                <outlet property="audioTBView" destination="iUF-Ct-ojb" id="mkb-1B-Loq"/>
+                <outlet property="backButton" destination="kq1-F4-DeB" id="BlT-Kk-aIE"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IXd-wR-l7m">
+                    <rect key="frame" x="0.0" y="59" width="393" height="50"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kq1-F4-DeB">
+                            <rect key="frame" x="308" y="0.0" width="75" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="75" id="oL6-JD-PSd"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="ClashDisplay-Medium" family="Clash Display" pointSize="14"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="backClick:" destination="-1" eventType="touchUpInside" id="OBQ-eV-SBO"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose Audio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ert-GD-o00">
+                            <rect key="frame" x="85" y="0.0" width="223" height="50"/>
+                            <fontDescription key="fontDescription" name="ClashDisplay-Bold" family="Clash Display" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="kq1-F4-DeB" secondAttribute="trailing" constant="10" id="7l1-Rh-eGd"/>
+                        <constraint firstAttribute="height" constant="50" id="FuA-TC-KX1"/>
+                        <constraint firstItem="kq1-F4-DeB" firstAttribute="leading" secondItem="ert-GD-o00" secondAttribute="trailing" id="MyN-Pj-tC9"/>
+                        <constraint firstAttribute="bottom" secondItem="ert-GD-o00" secondAttribute="bottom" id="Pxe-SH-Gng"/>
+                        <constraint firstItem="ert-GD-o00" firstAttribute="top" secondItem="IXd-wR-l7m" secondAttribute="top" id="cpx-Wf-voI"/>
+                        <constraint firstItem="kq1-F4-DeB" firstAttribute="top" secondItem="IXd-wR-l7m" secondAttribute="top" id="ocA-79-lmd"/>
+                        <constraint firstAttribute="bottom" secondItem="kq1-F4-DeB" secondAttribute="bottom" id="wf4-rH-cZJ"/>
+                        <constraint firstItem="ert-GD-o00" firstAttribute="leading" secondItem="IXd-wR-l7m" secondAttribute="leading" constant="85" id="wlA-Sw-1Bu"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="iUF-Ct-ojb">
+                    <rect key="frame" x="0.0" y="109" width="393" height="709"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="iUF-Ct-ojb" firstAttribute="top" secondItem="IXd-wR-l7m" secondAttribute="bottom" id="3YB-Pz-vsd"/>
+                <constraint firstItem="iUF-Ct-ojb" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="AfB-lF-eoK"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="iUF-Ct-ojb" secondAttribute="bottom" id="RCC-T4-5LU"/>
+                <constraint firstItem="iUF-Ct-ojb" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="UZn-4T-bet"/>
+                <constraint firstItem="IXd-wR-l7m" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="abF-Ho-d56"/>
+                <constraint firstItem="IXd-wR-l7m" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="kZb-fn-k3t"/>
+                <constraint firstItem="IXd-wR-l7m" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="rWb-n2-4ll"/>
+            </constraints>
+            <point key="canvasLocation" x="35.877862595419849" y="19.718309859154932"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

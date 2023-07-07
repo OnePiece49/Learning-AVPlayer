@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayBackView" customModule="LAS_SAMPLE_006" customModuleProvider="target">
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                    <real key="value" value="20"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="playPauseButton" destination="QhW-Ye-Uvw" id="sNU-6b-S56"/>
+                <outlet property="timeCurrentLabel" destination="LND-Hk-1kT" id="5Au-1I-Olt"/>
+                <outlet property="timeRemainingLabel" destination="uzU-Gl-G0Y" id="gCF-ce-Xsu"/>
+                <outlet property="timeSlider" destination="XFy-ln-V4v" id="VIa-ek-vIZ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="669" height="126"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="XFy-ln-V4v">
+                    <rect key="frame" x="58" y="0.0" width="553" height="31"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="5Ps-rV-p2T"/>
+                    </constraints>
+                </slider>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--:--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uzU-Gl-G0Y">
+                    <rect key="frame" x="619" y="0.0" width="50" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="3V2-dC-khB"/>
+                        <constraint firstAttribute="width" constant="50" id="oa2-tq-whz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--:--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LND-Hk-1kT">
+                    <rect key="frame" x="0.0" y="0.0" width="50" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="1gg-yY-qEm"/>
+                        <constraint firstAttribute="width" constant="50" id="WVc-I4-dHE"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1SZ-bI-A8U">
+                    <rect key="frame" x="619" y="76" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="9I8-gx-b7p"/>
+                        <constraint firstAttribute="height" constant="40" id="Ioo-Fx-mYR"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" image="ic_player_cut"/>
+                    <connections>
+                        <action selector="flipAction:" destination="-1" eventType="touchUpInside" id="8dg-Ti-UlJ"/>
+                    </connections>
+                </button>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="uUi-q6-arA">
+                    <rect key="frame" x="10" y="76" width="599" height="40"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GP2-97-6US">
+                            <rect key="frame" x="0.0" y="0.0" width="120" height="40"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_player_bw_10"/>
+                            <connections>
+                                <action selector="prev10Action:" destination="-1" eventType="touchUpInside" id="avt-7B-gFO"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wdf-PA-LGt">
+                            <rect key="frame" x="120" y="0.0" width="119.5" height="40"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_prev"/>
+                            <connections>
+                                <action selector="prevAction:" destination="-1" eventType="touchUpInside" id="DYQ-S4-JVk"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QhW-Ye-Uvw">
+                            <rect key="frame" x="239.5" y="0.0" width="120" height="40"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_play"/>
+                            <connections>
+                                <action selector="playPauseButtonTapped:" destination="-1" eventType="touchUpInside" id="bF0-3E-cO3"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Az-WG-rjI">
+                            <rect key="frame" x="359.5" y="0.0" width="119.5" height="40"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_next"/>
+                            <connections>
+                                <action selector="nextAction:" destination="-1" eventType="touchUpInside" id="DOV-C1-MVE"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v4q-96-jR2">
+                            <rect key="frame" x="479" y="0.0" width="120" height="40"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_player_fw_10"/>
+                            <connections>
+                                <action selector="next10Action:" destination="-1" eventType="touchUpInside" id="9CA-pN-w8b"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="eI7-ro-xLh"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="XFy-ln-V4v" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="8mR-Jl-ngj"/>
+                <constraint firstItem="uUi-q6-arA" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="Bqh-T2-Ipw"/>
+                <constraint firstItem="LND-Hk-1kT" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="NfT-cw-kwO"/>
+                <constraint firstItem="LND-Hk-1kT" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Nxp-Tn-IJl"/>
+                <constraint firstItem="uzU-Gl-G0Y" firstAttribute="leading" secondItem="XFy-ln-V4v" secondAttribute="trailing" constant="10" id="PL2-eM-82D"/>
+                <constraint firstItem="1SZ-bI-A8U" firstAttribute="leading" secondItem="uUi-q6-arA" secondAttribute="trailing" constant="10" id="WGX-c0-m0s"/>
+                <constraint firstItem="uzU-Gl-G0Y" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="bQS-Rd-6Mc"/>
+                <constraint firstAttribute="bottom" secondItem="1SZ-bI-A8U" secondAttribute="bottom" constant="10" id="cFm-oC-prb"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="1SZ-bI-A8U" secondAttribute="trailing" constant="10" id="jXi-OF-EnK"/>
+                <constraint firstItem="XFy-ln-V4v" firstAttribute="leading" secondItem="LND-Hk-1kT" secondAttribute="trailing" constant="10" id="nsF-Jm-a9D"/>
+                <constraint firstAttribute="bottom" secondItem="uUi-q6-arA" secondAttribute="bottom" constant="10" id="p4F-ff-6Ks"/>
+                <constraint firstAttribute="trailing" secondItem="uzU-Gl-G0Y" secondAttribute="trailing" id="rIf-uY-apY"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="316.66666666666669" y="121.875"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_next" width="25" height="19"/>
+        <image name="ic_play" width="44" height="44"/>
+        <image name="ic_player_bw_10" width="25" height="24"/>
+        <image name="ic_player_cut" width="24" height="22"/>
+        <image name="ic_player_fw_10" width="25" height="24"/>
+        <image name="ic_prev" width="25" height="19"/>
+    </resources>
+</document>
