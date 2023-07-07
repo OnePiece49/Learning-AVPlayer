@@ -56,7 +56,9 @@ Mặc dù AVAsset rất quan trọng cho việc hiển thị media data, ta cũn
 ![](images/hirachy_media.png)
 
 `AVPlayer`: là class trung tâm của hệ thống, có nhiệm vụ play, pause,... assets. `AVPlayer` được sử dụng trong cả locally hoặc streaming data.
+
 `AVPlayerItem`: là 1 class được Apple cung cấp, được đại diện cho 1 media item mà có thể được play bởi `AVPlayer`. `AVPlayerItem` đóng gói các thông tin và thuộc tính liên quan tới media như media'URL, metaData và playback status.
+
 `AVLayerLayer`: Là 1 Class được Apple cung câp cho việc displaying video content từ `AVPlayer`.
 
 ## 1.5 Observing Playback State
@@ -123,7 +125,7 @@ let cursor = CMTime(value: 90, timescale: 30)
 <a name="buoc7"></a>
 
 ## 1.7 Tổng kết
-Để có thể playVideo, lấy các thông tin creationDate, duration,... ta cần có 1 biến asset thuộc kiểu `AVAsset` hoặc 1 `URL` của asset nào đó. Sau khi có được biến asset rồi, ta sẽ cần 1 biến `playItem` thuộc kiểu `AVPlayItem`, biến này se đại diện cho 1 media item và có thể được play bởi player.
+Để có thể playVideo, lấy các thông tin creationDate, duration,... ta cần có 1 biến asset thuộc kiểu `AVAsset` hoặc 1 `URL` của asset nào đó. Sau khi có được biến asset rồi, ta sẽ cần 1 biến `playItem` thuộc kiểu `AVPlayItem`, biến này sẽ đại diện cho 1 media item và có thể được play bởi player.
 
 Sau khi có playItem, ta sẽ khởi tạo player để playItem đó.
 
@@ -152,7 +154,8 @@ playerView.play(with: url)
 Cách 2: Tạo Asset từ UIImagePicker
 
 ```swift
-Đầu tiên ta phải requestAuthorization() để lấy asset
+///Đầu tiên ta phải requestAuthorization() để lấy asset
+
 imagePick = UIImagePickerController()
 imagePick.delegate = self
 imagePick.sourceType = .savedPhotosAlbum
@@ -242,18 +245,25 @@ PHImageManager.default().requestAVAsset(forVideo: video, options: options, resul
 
 Với duration là tổng thời gian Video, và có kiểu `CMTime`:
 
-- Để có thể convert từ `CMTime` sang second, ta sử dụng `CMTimeGetSeconds()`, VD duration = CMTime(value: 100, scale: 1), thì time = 100
-
-- Để có thể convert từ 64s sang kiểu `CMTime`, ta sử dụng `CMTimeMakeWithSeconds()`, VD current = 64, thì currentTime sau khi được gán trong vd trên thì sẽ bằng CMTime(value: 64000, scale: 1000).
+- Để có thể convert từ `CMTime` sang second, ta sử dụng `CMTimeGetSeconds()`.
   
-Sau đó để có thể để Video đến thời gian ta muốn, ta dùng hàm seek()
+VD: `duration = CMTime(value: 100, scale: 1)`, thì `time = 100`
+
+- Để có thể convert từ 64s sang kiểu `CMTime`, ta sử dụng `CMTimeMakeWithSeconds()`
+
+VD: `current = 64`, thì currentTime sau khi được gán trong vd trên thì sẽ bằng` CMTime(value: 64000, scale: 1000)`.
+  
+Sau đó để có thể để Video đến thời gian ta muốn, ta dùng hàm seek().
+
 ```php
 func updateVideo(time: CMTime) {
     player?.seek(to: time)
 }
 ```
 
-Ta có thể convert CMtime sang dạng String thông qua hàm sau:
+Ta có thể convert `CMtime` sang dạng String thông qua hàm sau:
+
+```swift
 func getTimeString(time: CMTime) -> String? {
     let totalSeconds = CMTimeGetSeconds(time)
     guard !(totalSeconds.isNaN || totalSeconds.isInfinite) else {
@@ -268,6 +278,7 @@ func getTimeString(time: CMTime) -> String? {
         return String(format: "%02i:%02i", arguments: [minutes, seconds])
     }
 }
+```
 
 ## 2.2 CropVideo
 
@@ -339,7 +350,11 @@ print("DEBUG: \(urlAsset) siuuuu")
 
 ## 2.3 Merge Video
 
-Bất cứ khi nào ta muốn edit media hoặc thêm effect, ta có thể sử dụng `AVComposition`. `AVComposition` là một class của `AVFoundation`, nó cung cấp các chức năng cho việc kết hợp, sắp xếp các assets khác nhau hoặc các **type assets** khác nhau thành 1 asset. **Asset types** có thể bao gồm các audio, video subtitle, metadata, và text. Khi làm việc với `AVComposition`, ta sẽ phải làm việc với `AVAsset`, và `AVAssetTrack`. (`AVComposition` là 1 subclass của `AVAsset`.) Khi thay đổi `AVAsset` bằng `AVComposition` sẽ không ảnh hưởng tới gốc media file. 
+Bất cứ khi nào ta muốn edit media hoặc thêm effect, ta có thể sử dụng `AVComposition`. 
+
+`AVComposition` là một class của `AVFoundation`, nó cung cấp các chức năng cho việc kết hợp, sắp xếp các assets khác nhau hoặc các **type assets** khác nhau thành 1 asset. **Asset types** có thể bao gồm các audio, video subtitle, metadata, và text. 
+
+Khi làm việc với `AVComposition`, ta sẽ phải làm việc với `AVAsset`, và `AVAssetTrack`. (`AVComposition` là 1 subclass của `AVAsset`.) Khi thay đổi `AVAsset` bằng `AVComposition` sẽ không ảnh hưởng tới gốc media file. 
 
 `AVAsset` chứa 1 tập các đối tượng `AVTrack`. `AVTrack` có thể là video track, audio track, subtitle track,...
 
@@ -369,7 +384,9 @@ let movie = AVMutableComposition()
 let videoTrack = movie.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
 let audioTrack = movie.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
 ```
-Đoạn code phía trên tạo 1 instance `AVMutableComposition`, sau đó thêm 2 track, 1 track sẽ hold `.video` assets và 1 track hold `.audio` assets, 2 biến track thuộc kiểu `AVMutableCompositionTrack`. Sử dụng signal `kCMPersistendTrackID_Invalid` khi ta muốn 1 id mới, độc nhất cho track của chúng ta.(The `kCMPersistendTrackID_Invalid` signals that you want a new, unique track id generated.)
+Đoạn code phía trên tạo 1 instance `AVMutableComposition`, sau đó thêm 2 track, 1 track sẽ hold `.video` assets và 1 track hold `.audio` assets, 2 biến track thuộc kiểu `AVMutableCompositionTrack`. 
+
+Sử dụng signal `kCMPersistendTrackID_Invalid` khi ta muốn 1 id mới, độc nhất cho track của chúng ta. (The `kCMPersistendTrackID_Invalid` signals that you want a new, unique track id generated.)
 
 - Adding Video Clips:
 
@@ -386,6 +403,7 @@ try audioTrack?.insertTimeRange(beachRange, of: beachAudioTrack, at: CMTime.zero
 ```
 
 Phân tích 2 đoạn code, ta có 1 biến movie thuộc kiểu `AVMutableComposition()`. Từ đây, ta sẽ tạo 2 biến track là `videotrack` và `audioTrack`.
+
 Sau đó ta sẽ có 1 beachMovie thuộc kiểu `AVURLAsset`, ta muốn merge video này, thì ta cùng cần tạo 2 biến track audio và video là beachAudioTrack và beachVideoTrack. Sau đó ta tạo 1 biến beachRange, cho việc track toàn bộ data của beachMovie đó. Sau khi khởi tạo 2 biến track của beachMovie xong, từ sẽ add track đó vào 2 track tổng là videoTrack và audioTrack:
 
 ```php
