@@ -235,7 +235,8 @@ class PhotoVC: BaseVC {
                 VideoGenerator.presetName = AVAssetExportPresetPassthrough
                 VideoGenerator.fileName = fileName
                 
-                self.mergeMovie(videoURLs: videoUrls)
+//                self.mergeMovie(videoURLs: videoUrls)
+                self.mergeVideosByViet(videoURLs: videoUrls)
             }
             
         } else {
@@ -258,6 +259,57 @@ class PhotoVC: BaseVC {
                 self.view.displayToast("Merge error!!!")
             }
         }
+    }
+    
+    func mergeVideosByViet(videoURLs: [URL]) {
+//        let url = URL(string: "https://github.com/Vietdz123/Learning-AVPlayer/blob/main/ReadMe-Player.md#phan2")
+//        print("DEBUG: \(url?.lastPathComponent)")
+//        videoURLs.forEach { video in
+//            print("DEBUG: \(video.lastPathComponent)")
+//        }
+        
+        for i in 0...2 {
+            print("DEBUG: \(self.allPhotos[i].value(forKey: "filename"))")
+        }
+        
+        
+
+        let acceptedFile = ["mp4", "mov", "m4v"]
+        
+    
+        
+        let _videoUrls = videoURLs.filter { url in
+            return !url.absoluteString.contains(".DS_Store") && acceptedFile.contains(url.pathExtension.lowercased())
+        }
+        
+        if videoURLs.isEmpty {
+            return
+        }
+        
+        let mergeVideo = AVMutableComposition()
+        let mergeVideoTrack = mergeVideo.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let mergeAudioTrack = mergeVideo.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+        
+        var videoAVUrl: [AVURLAsset] = []
+        var insertTime = CMTime(seconds: 0, preferredTimescale: 1)
+        
+        _videoUrls.forEach { url in
+            let avurl = AVURLAsset(url: url)
+            videoAVUrl.append(avurl)
+        }
+        
+        videoAVUrl.forEach { avurl in
+            guard let videoTrack = avurl.tracks(withMediaType: .video).first, let audioTrack = avurl.tracks(withMediaType: .audio).first else {return}
+
+            let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: avurl.duration)
+            try? mergeAudioTrack?.insertTimeRange(frameRange, of: videoTrack, at: insertTime)
+            try? mergeAudioTrack?.insertTimeRange(frameRange, of: audioTrack, at: insertTime)
+        }
+        
+        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return}
+        let folder = url.appendingPathExtension("videoEditor").appendingPathExtension("Merge_\(AVAsset(url: url))")
+        let data = AVAsset(url: url) as? AVURLAsset
+        
     }
     
     @IBAction func addClick(_ sender: Any) {

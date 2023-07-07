@@ -7,6 +7,7 @@
 
 import UIKit
 import Photos
+import MediaPlayer
 
 enum GenerateType: String {
     case cutterVideo, generateVideo, mergeVideo, myFlie
@@ -22,6 +23,7 @@ enum GenerateType: String {
     }
     
     func imageName() -> String {
+        MPMediaItem().artwork
         switch self {
         case .cutterVideo: return "ic_video_cutter"
         case .generateVideo: return "ic_video_audio_merge"
@@ -186,6 +188,7 @@ extension HomeVC : UIImagePickerControllerDelegate & UINavigationControllerDeleg
         
         let videoAsset = info[.phAsset] as? PHAsset
         let videoName = videoAsset?.value(forKey: "filename") as! String
+        print("DEBUG: \(videoName) and \(videoAsset?.originalName)")
         self.dismiss(animated: true, completion: nil)
         
         guard let navi = UIWindow.keyWindow?.rootViewController as? UINavigationController else {

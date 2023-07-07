@@ -321,6 +321,7 @@ public class VideoGenerator: NSObject {
         for sourceAsset in videoAssets {
           do {
             if let assetVideoTrack = sourceAsset.tracks(withMediaType: .video).first, let assetAudioTrack = sourceAsset.tracks(withMediaType: .audio).first {
+                
               let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration)
               try videoTrack.insertTimeRange(frameRange, of: assetVideoTrack, at: insertTime)
               try audioTrack.insertTimeRange(frameRange, of: assetAudioTrack, at: insertTime)

@@ -942,7 +942,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = FAWF54HC53;
+				DEVELOPMENT_TEAM = AL5596JXF3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LAS_SAMPLE_014/Info.plist;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "The application need permission to access to the Apple Music to get musics to play.";
@@ -958,7 +958,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ducanh.LAS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ducanh.LAS22;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -974,7 +974,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = FAWF54HC53;
+				DEVELOPMENT_TEAM = AL5596JXF3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LAS_SAMPLE_014/Info.plist;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "The application need permission to access to the Apple Music to get musics to play.";
