@@ -268,10 +268,7 @@ class PhotoVC: BaseVC {
 //            print("DEBUG: \(video.lastPathComponent)")
 //        }
         
-        for i in 0...2 {
-            print("DEBUG: \(self.allPhotos[i].value(forKey: "filename"))")
-        }
-        
+ 
         
 
         let acceptedFile = ["mp4", "mov", "m4v"]
@@ -300,6 +297,7 @@ class PhotoVC: BaseVC {
         
         videoAVUrl.forEach { avurl in
             guard let videoTrack = avurl.tracks(withMediaType: .video).first, let audioTrack = avurl.tracks(withMediaType: .audio).first else {return}
+
 
             let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: avurl.duration)
             try? mergeAudioTrack?.insertTimeRange(frameRange, of: videoTrack, at: insertTime)

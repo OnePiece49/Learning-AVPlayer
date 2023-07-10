@@ -432,3 +432,27 @@ DispatchQueue.main.async {
 }
 })
 ```
+
+## 2.4 Make Videos from Images
+
+- Tìm hiểu về `frame buffer`:
+
+`Frame buffer` là 1 vùng nhớ đặc biệt của computer mà cho phép lưu trữ các thông tin cần thiết cho việc khởi tạo 1 ảnh hoặc 1 video frame. Tưởng tượng ta đang làm việc với `digital drawing`. `Frame buffer` sẽ là nơi ta theo dõi tất cả các điểm(`pixel`) ta vẽ. Mỗi điểm có color và position của riêng nó. Mỗi khi ta thêm hoặc thay đổi điểm, ta cũng sẽ update `frame buffer` đó.
+
+Tương tự với video, mỗi frame của video được hình thành từ vô số các `pixels`. `frame buffer` cũng sẽ lưu `pixel data` cho mỗi frame. Mỗi khi video được played, `frame buffer` sẽ liên tục update new frames.
+
+`Frame buffer` hoặc động như 1 cầu nối giữa computer và các thiết bị hiển thị như màn hình. Là nơi chứa các thông tin cho việc hiển thị ở màn hình. Computer có thể thực thi các hành động như read hoặc write để hiển thị ra màn hình.
+
+Nói tóm lại, 1 `frame buffer` của 1 image sẽ giữ tất cả các thông tin của  `pixels` image đó. Còn với video, nó cũng có 1 `frame buffer` để hiển thị nội dung của frame hiện tại của video, khi video chạy, `frame buffer` sẽ cập nhập lại các pixel để hiển thị lên cho đúng.
+
+- Nội dung chính:
+
+Ta có 1 vài method và class như `CADisplayLink`, `AVPlayerItemVideoOutput`, `AVCaptureDevice` được sử dụng để render ra buffer, như `AVCaptureDevice` được sử dụng để chụp ảnh đó, nó sẽ render ra `image buffer` và từ `image buffer` ta sẽ được ảnh. Tuy nhiên trong trường hợp này ta sẽ không sử dụng cách này(vì có capture video hay image đâu mà có `image buffer`), mà ta sẽ render  ra `image buffer` 1 cách thủ công từ các images có sẵn, sau đó sử dụng `AVAssetWriter` để render ra video. 
+
+Có vài điểm ta cần quan tâm như sau:
+
+- Bởi vì image là ảnh tĩnh, nên ta có thể tạo video từ small video files bằng cách sử dụng  low frame rate . Tuy nhiên ta sẽ gặp vấn đề nếu cố đẩy frame rate nhanh lên
+- Kích thước cuối cùng của Video sẽ là bao nhiêu ? Ta biết việc resize 1 image và add padding là rất đơn giản thông qua việc sử dụng `CoreImage` trước khi chúng trở thành 1 video. Khi các image đó trở thành 1 vieo, `AVFoundation` sẽ resize or crop những images khi **input dimensions and output dimension don't match.**
+
+
+

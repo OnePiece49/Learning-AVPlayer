@@ -23,7 +23,6 @@ enum GenerateType: String {
     }
     
     func imageName() -> String {
-        MPMediaItem().artwork
         switch self {
         case .cutterVideo: return "ic_video_cutter"
         case .generateVideo: return "ic_video_audio_merge"
