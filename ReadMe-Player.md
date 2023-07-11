@@ -286,7 +286,7 @@ func getTimeString(time: CMTime) -> String? {
 
 `AVAssetExportSession` là 1 class của `AVFoundation` mà cho phép ta export `AVAsset`(Như là Video hoặc image) sang một dạng format hoặc configuration mới.
 
-Ta khởi tạo AVAsset như sau:
+Ta khởi tạo `AVAssetExportSession` như sau:
 
 ```php
 AVAssetExportSession(asset:presetName:)
@@ -455,4 +455,207 @@ Có vài điểm ta cần quan tâm như sau:
 - Kích thước cuối cùng của Video sẽ là bao nhiêu ? Ta biết việc resize 1 image và add padding là rất đơn giản thông qua việc sử dụng `CoreImage` trước khi chúng trở thành 1 video. Khi các image đó trở thành 1 vieo, `AVFoundation` sẽ resize or crop những images khi **input dimensions and output dimension don't match.**
 
 
+### 2.4.1 Writing Buffers using AVAssetWriter
 
+`AVAssetWriter` được sử dụng để encode media thành 1 file trong disk. `AVAssetWriter` hỗ trợ multiple inputs of diffirent kinds như audio, video, metadata, tuy nhiên trong bài viết naỳ, ta sẽ chỉ sử dụng 1 video input. Điểm khác biệt giữa `AVAssetWriter` và `AVAssetExportSession` là `AVAssetWriter` sử dụng multiple inputs và mỗi inputs là 1 track, trong khi `AVAssetExportSession` sử dụng 1 `AVMutableComposition` như là 1 input duy nhất. Kết quả của car 2 đều là 1 file duy nhất.
+
+Các bước để tạo ra 1 file video từ images là
+
+1. Tạo 1 `pixel buffer` tương ứng với image truyền vào
+2. Render image ra thành `pixel buffer`
+3. Tạo `AVAssetWriter` tương ứng với 1 single video input
+4. Lựa chọn bao nhiêu frame với khoảng thời gian của video (ý là video 16s thì ta muốn trong 16s đó có bao nhiêu frame khung hình)
+5. Tạo 1 vòng loop, mỗi 1 lần lặp, ta sẽ append the pixel buffer
+6. clean up
+
+**Create The Pixel Buffer:**
+
+Phần code bên dưới sẽ tạo ra 1 `CIImage` từ 1 image. Sau đó sẽ tiếp tục tạo ra 1 `pixel buffer`. CUối cùng, ta sẽ sử dụng `CIContext` để render ra image bên vào trong buffer.
+
+```swift
+
+guard let uikitImage = UIImage(named: imageName), var staticImage = CIImage(image: uikitImage) else {
+  return
+}
+var pixelBuffer: CVPixelBuffer?
+
+//set some standard attributes
+let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
+     kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
+//create the width and height of the buffer to match the image
+let width:Int = Int(staticImage.extent.size.width)
+let height:Int = Int(staticImage.extent.size.height)
+//create a buffer (notice it uses an in/out parameter for the pixelBuffer variable)
+CVPixelBufferCreate(kCFAllocatorDefault,
+                    width,
+                    height,
+                    kCVPixelFormatType_32BGRA,
+                    attrs,
+                    &pixelBuffer)
+//create a CIContext
+let context = CIContext()
+//use the context to render the image into the pixelBuffer
+context.render(staticImage, to: pixelBuffer!)
+```
+
+Đôi khi chúng ta có thể nghĩ rằng `CIImage` tương tự như 1 iamge, nhưng APple clear rằng `CIImage` không phải là 1 image. `CIImage` cần 1 `context` cho việc rendering. The fact that CIImage is just the instructions for creating an image. Note: You can also use CGImage and the CoreGraphics framework to create pixel buffers. I find it easier to use the CoreImage framework.
+
+
+**Configure AVAssetWriter:**
+
+Từ buffer được tạo ở bước 1, bước này ta sẽ configure `AVAssetWriter`. Chúng ta sẽ cần 1 dicitionary cho việc configure các thông số liên quan tới dimensions and format of the outputs. 
+
+One of the most important settings is the output dimension. Nếu output dimension mà match với original image, thì qua perfect rồi đ còn gì bàn. Tuy nhiên nêys output mà nhỏ hơn, nó sẽ compress image truyền vào cho đến khi fit. Còn nếu output mà lớn hơn, image sẽ được expand cho đến khi fit width or height matches the output size. Tuy nhiên nếu image mà expand too much, thì sẽ xảy ra hiện tượng đen viền kiểu dưới đây.
+
+[](/images/dimension.png)
+
+Để có thể configure output cho `AVAssetWriter`, đầu tiên ta cần tạo 1 dictionary như dưới đây:
+
+```swift
+let assetWriterSettings = [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey : 400, AVVideoHeightKey: 400] as [String : Any]
+let settingsAssistant = AVOutputSettingsAssistant(preset: .preset1920x1080)?.videoSettings
+```
+
+Ở ví dụ này, ta cấu hình các thông số như `output dimension of 400 x 400 and provides for .h264 encoding.` và chất lượng video là `1920x1080`. Để biết thêm về các thông số preset khác, truy cập [AVOutputSettingsAssistant](https://developer.apple.com/documentation/avfoundation/avoutputsettingsassistant)
+
+- `h.264`, also known as MPEG-4 Part 10 or AVC (Advanced Video Coding). Được sử dụng rộng rãi trong việc nén video. Nó rất hiệu quả trong việc encoding data, giảm size của video nhưng không làm giảm chất lượng hình ảnh quá nhiều.
+
+**Write the pixel buffer to the video file:**
+
+With the settings configured, the asset writer can loop through and append the contents of the pixel buffer to create each frame of the video. Ta nhớ rằng hồi xưa khi export 1 video bằng `AVAssetExportSession`, ta phải xoá file cũ đi nếu trùng tên, thì cái này cũng vậy. Vì AVFoundation nó ko có tính chất override (that is why you have to delete any old files before you can create the new AVAssetWriter.).
+
+```php
+//generate a file url to store the video. some_image.jpg becomes some_image.mov
+guard let imageNameRoot = imageName.split(separator: ".").first, let outputMovieURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(imageNameRoot).mov") else {
+  throw ConstructionError.invalidURL //an error i made up
+}
+
+try? FileManager.default.removeItem(at: outputMovieURL)
+
+//create an assetwriter instance
+guard let assetwriter = try? AVAssetWriter(outputURL: outputMovieURL, fileType: .mov) else {
+  return
+}
+
+let settingsAssistant = AVOutputSettingsAssistant(preset: .preset1920x1080)?.videoSettings
+
+let assetWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: settingsAssistant)
+//create an adaptor for the pixel buffer
+let assetWriterAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: assetWriterInput, sourcePixelBufferAttributes: nil)
+//add the input to the asset writer
+assetwriter.add(assetWriterInput)
+//begin the session
+assetwriter.startWriting()
+assetwriter.startSession(atSourceTime: CMTime.zero)
+//determine how many frames we need to generate
+let framesPerSecond = 30
+//duration is the number of seconds for the final video
+let totalFrames = duration * framesPerSecond
+var frameCount = 0
+while frameCount < totalFrames {
+  if assetWriterInput.isReadyForMoreMediaData {
+    let frameTime = CMTimeMake(value: Int64(frameCount), timescale: Int32(framesPerSecond))
+    //append the contents of the pixelBuffer at the correct time
+    assetWriterAdaptor.append(pixelBuffer!, withPresentationTime: frameTime)
+    frameCount+=1
+  }
+}
+//close everything
+assetWriterInput.markAsFinished()
+assetwriter.finishWriting {
+  pixelBuffer = nil
+}
+
+```
+
+Sau các bước này, ta đã render ra được video dài 30s, gồm 900 frame ảnh naruto.
+
+Thực tiễn: Giờ ta cần tạo 1 video, gồm n image truyền vào trong thời gian 30s, mỗi giây gồm 30 frame.
+
+```swift
+func mergeImagesToVideo() {
+    let imageName: [String] = ["naruto", "bp", "see", "op", "op2", "op3"]
+    
+    var pixelBuffers: [CVPixelBuffer?] = []
+    //create a CIImage
+    
+    imageName.forEach { name in
+        var pixelBuffer: CVPixelBuffer?
+        guard let uikitImage = UIImage(named: name), let staticImage = CIImage(image: uikitImage) else {
+            return
+        }
+
+        let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
+                kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
+
+        let width:Int = Int(staticImage.extent.size.width)
+        let height:Int = Int(staticImage.extent.size.height)
+
+        CVPixelBufferCreate(kCFAllocatorDefault,
+                            width,
+                            height,
+                            kCVPixelFormatType_32BGRA,
+                            attrs,
+                            &pixelBuffer)
+        //create a CIContext
+        let context = CIContext()
+        context.render(staticImage, to: pixelBuffer!)
+        pixelBuffers.append(pixelBuffer)
+    }
+    
+    guard let imageNameRoot = imageName.split(separator: ".").first, let outputMovieURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(imageNameRoot).mov") else {
+        return
+    }
+    //delete any old file
+    do {
+        try FileManager.default.removeItem(at: outputMovieURL)
+    } catch {
+        print("Could not remove file \(error.localizedDescription)")
+    }
+
+    guard let assetwriter = try? AVAssetWriter(outputURL: outputMovieURL, fileType: .mov) else {
+        abort()
+    }
+
+    let settingsAssistant = AVOutputSettingsAssistant(preset: .preset1920x1080)?.videoSettings
+    //create a single video input
+    let assetWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: settingsAssistant)
+    //create an adaptor for the pixel buffer
+    let assetWriterAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: assetWriterInput, sourcePixelBufferAttributes: nil)
+    assetwriter.add(assetWriterInput)
+    //begin the session
+    assetwriter.startWriting()
+    assetwriter.startSession(atSourceTime: CMTime.zero)
+    //determine how many frames we need to generate
+    let framesPerSecond = 30
+    //duration is the number of seconds for the final video
+    let totalFrames = 30 * framesPerSecond
+    var frameCount = 0
+    var count = 0
+    
+    print("DEBUG: \(totalFrames)")
+    while frameCount < totalFrames {
+        if assetWriterInput.isReadyForMoreMediaData {
+        let frameTime = CMTimeMake(value: Int64(frameCount), timescale: Int32(framesPerSecond))
+
+        assetWriterAdaptor.append(pixelBuffers[count]!, withPresentationTime: frameTime)
+        frameCount+=1
+            print("DEBUG: \(frameCount) siuuuuuu")
+            if frameCount % (totalFrames / pixelBuffers.count) == 0 {
+                count += 1
+                print("DEBUG: \(totalFrames / pixelBuffers.count) và \(totalFrames % (totalFrames / pixelBuffers.count))")
+            }
+        }
+    }
+    
+    assetWriterInput.markAsFinished()
+    assetwriter.finishWriting {
+        for i in 0..<pixelBuffers.count {
+            pixelBuffers[i] = nil
+        }
+    }
+}
+```
+
+# III. Reference
+1. [How to Make Videos from Still Images with AVFoundation and Swift](https://teams.microsoft.com/_?culture=vi-vn&country=VN&lm=deeplink&lmsrc=homePageWeb&cmpid=WebSignIn#/school/conversations/2021.2?threadId=19:3335fd3e1cac43519de943e5016e3e53@thread.tacv2&ctx=channel)
