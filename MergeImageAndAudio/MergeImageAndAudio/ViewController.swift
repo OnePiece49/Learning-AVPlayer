@@ -59,6 +59,8 @@ class ViewController: UIViewController {
           print("Could not remove file \(error.localizedDescription)")
         }
 
+        print("DEBUG: \(outputMovieURL)")
+        return
         guard let assetwriter = try? AVAssetWriter(outputURL: outputMovieURL, fileType: .mov) else {
           abort()
         }

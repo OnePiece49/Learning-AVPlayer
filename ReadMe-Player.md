@@ -633,17 +633,14 @@ func mergeImagesToVideo() {
     var frameCount = 0
     var count = 0
     
-    print("DEBUG: \(totalFrames)")
     while frameCount < totalFrames {
         if assetWriterInput.isReadyForMoreMediaData {
         let frameTime = CMTimeMake(value: Int64(frameCount), timescale: Int32(framesPerSecond))
 
         assetWriterAdaptor.append(pixelBuffers[count]!, withPresentationTime: frameTime)
         frameCount+=1
-            print("DEBUG: \(frameCount) siuuuuuu")
             if frameCount % (totalFrames / pixelBuffers.count) == 0 {
                 count += 1
-                print("DEBUG: \(totalFrames / pixelBuffers.count) và \(totalFrames % (totalFrames / pixelBuffers.count))")
             }
         }
     }
@@ -656,6 +653,16 @@ func mergeImagesToVideo() {
     }
 }
 ```
+
+Giải thích Code:
+
+Bước 1: Ta có 1 array buffer, chứa tất cả các pixel buffer của array image đó.
+Bước 2: Ta sẽ tạo file Output, và sẽ xoá file cũ đi nếu đã tồn tại.
+Bước 3: Ta sẽ setting các thông số như chất lượng vido, frame, duration video.
+
+Output: 
+
+![](/videos/%5B%22naruto%22%2C%20%22bp%22%2C%20%22see%22%5D.mov)
 
 # III. Reference
 1. [How to Make Videos from Still Images with AVFoundation and Swift](https://teams.microsoft.com/_?culture=vi-vn&country=VN&lm=deeplink&lmsrc=homePageWeb&cmpid=WebSignIn#/school/conversations/2021.2?threadId=19:3335fd3e1cac43519de943e5016e3e53@thread.tacv2&ctx=channel)
